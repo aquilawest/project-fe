@@ -37,7 +37,7 @@ export default function AddUserPage() {
     ];
 
     const onSubmit = (data:any) => {
-        // Combine form data with files
+
         const formData = {
             ...data,
             restaurantImage,
