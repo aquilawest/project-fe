@@ -3,9 +3,10 @@ import {
   createOrderServices,
   deleteOrderServices,
   getAllOrdersServices,
+  postUserDirections,
   updateOrderServices,
 } from "@/feature/order/orderServices";
-import { ICreateOrderModal } from "@/feature/order/types";
+import { ICreateOrderModal, IOrderDirectionBody } from "@/feature/order/types";
 import { _successPromt } from "@/utils/toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -97,6 +98,33 @@ export const useUpdateOrderMutation = () => {
       queryClient.invalidateQueries({
         queryKey: ["useGetAllAdminOrdersQuery", true],
       });
+      // dispatch(setUser(user));
+      // dispatch(setAuthentication());
+      // queryClient.setQueryData(["user"], data);
+    },
+    onError: (error: any) => {
+      console.log(error.response?.data?.error || error.message);
+    },
+  });
+};
+
+export const usePostUserDirections = () => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  // const dispatch = useAppDispatch();
+  return useMutation({
+    mutationFn: (data: IOrderDirectionBody) => postUserDirections(data),
+    onMutate: () => {
+      console.log("posting directions....");
+    },
+    onSuccess: (data, values) => {
+      console.log(data, "data product upppppppp");
+      // window.location.reload();
+
+      // _successPromt("Updated Successfully", 3000);
+      // queryClient.invalidateQueries({
+      //   queryKey: ["useGetAllAdminOrdersQuery", true],
+      // });
       // dispatch(setUser(user));
       // dispatch(setAuthentication());
       // queryClient.setQueryData(["user"], data);

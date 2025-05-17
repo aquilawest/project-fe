@@ -1,6 +1,10 @@
 import axiosInstance from "@/utils/api";
 import { ENDPOINT_URLS } from "@/utils/endpoints";
-import { ICreateOrderModal } from "./types";
+import {
+  ICreateOrderModal,
+  INearbyPlaceBody,
+  IOrderDirectionBody,
+} from "./types";
 
 // Get All Services
 export const getAllOrdersServices = async (): Promise<any> => {
@@ -43,6 +47,25 @@ export const updateOrderServices = async (
 export const deleteOrderServices = async (orderId: string): Promise<any> => {
   const response = await axiosInstance.delete<any>(
     ENDPOINT_URLS.order["delete-order"](orderId)
+  );
+  return response.data || response;
+};
+
+// Get All Services
+export const postUserDirections = async (
+  body: IOrderDirectionBody
+): Promise<any> => {
+  const response = await axiosInstance.post<any>(
+    ENDPOINT_URLS.order["post-directions"],
+    body
+  );
+  return response.data || response;
+};
+// Get All Services
+export const getNearbyPlaces = async (body: INearbyPlaceBody): Promise<any> => {
+  const response = await axiosInstance.post<any>(
+    ENDPOINT_URLS.order["post-directions"],
+    body
   );
   return response.data || response;
 };

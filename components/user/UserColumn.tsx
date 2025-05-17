@@ -81,9 +81,12 @@ export const columns: ColumnDef<User, unknown>[] = [
         order?.products?.[0]?.productId
       );
       return (
-        <div className="relative">
+        <Link
+          href={`/dashboard/map-view?q=${product?.name}`}
+          className="relative"
+        >
           <p>{product?.name}</p>
-        </div>
+        </Link>
       );
     },
   },
@@ -103,11 +106,17 @@ export const columns: ColumnDef<User, unknown>[] = [
     },
     cell: ({ row }) => {
       const order = row.original;
-      console.log({ order });
+      const { data: product } = useOneSingleProduct(
+        order?.products?.[0]?.productId
+      );
+      // console.log({ order });
       return (
-        <div className="relative">
+        <Link
+          href={`/dashboard/map-view?q=${product?.name}`}
+          className="relative"
+        >
           <p>{order?.products?.[0]?.quantity}</p>
-        </div>
+        </Link>
       );
     },
   },
@@ -127,10 +136,16 @@ export const columns: ColumnDef<User, unknown>[] = [
     cell: ({ row }) => {
       const order = row.original;
       console.log({ order });
+      const { data: product } = useOneSingleProduct(
+        order?.products?.[0]?.productId
+      );
       return (
-        <div className="relative">
+        <Link
+          href={`/dashboard/map-view?q=${product?.name}`}
+          className="relative"
+        >
           <p>{order?.status}</p>
-        </div>
+        </Link>
       );
     },
   },

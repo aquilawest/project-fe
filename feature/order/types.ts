@@ -12,3 +12,16 @@ export type ICreateOrderModal = {
   status: string;
   note: string;
 };
+
+export type IOrderDirectionBody = {
+  origin: string;
+  destination: string;
+};
+export type INearbyPlaceBody = {
+  location: {
+    lat: number;
+    lng: number;
+  };
+  radius: number;
+  type: string;
+};

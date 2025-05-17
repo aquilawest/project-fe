@@ -27,6 +27,8 @@ export const ENDPOINT_URLS = {
     "update-order": (orderId: string) => `/order/update-order/${orderId}`,
     "delete-order": (orderId: string) => `/order/delete-order/${orderId}`,
     "get-one-order": (orderId: string) => `/order/one-order/${orderId}`,
+    "post-directions": "/directions",
+    "get-nearbyPlaces": `/nearby-places`,
   },
   user: {
     "get-user": "/profile/get-profile",
