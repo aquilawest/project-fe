@@ -4,7 +4,8 @@ import React, { useEffect, useState } from "react";
 import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps";
 import Autocomplete from "react-google-autocomplete";
 import { useMap } from "@vis.gl/react-google-maps";
-import { usePostUserDirections } from "@/hooks/orders.hook";
+import { useGetNearbyPlaceMutation, usePostUserDirections } from "@/hooks/orders.hook";
+import { get } from "http";
 
 const MapViewPage = () => {
   const [origin, setOrigin] = useState<{
@@ -20,6 +21,7 @@ const MapViewPage = () => {
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
 
   const postUserMutation = usePostUserDirections();
+  const getNearbyPlaceMutation = useGetNearbyPlaceMutation();
 
   const GOOGLE_MAPS_API_KEY = "AIzaSyBNiQU_nkK6ddg5Ldi5Ofn_TPakcgMbCm4";
   useEffect(() => {
@@ -73,7 +75,28 @@ const MapViewPage = () => {
 
   const mapCenter = origin ?? { lat: 0, lng: 0 };
 
-  if (!postUserMutation.data) {
+  const handleSubmit = async(destination: string,origin:{
+    lat: number;
+    lng: number;
+    address: string;
+})=>{
+    await postUserMutation.mutateAsync({
+      destination: destination,
+      origin: origin.address,
+    }).then(() => {
+      getNearbyPlaceMutation.mutateAsync({
+        radius:1000,
+        type:"restaurant",
+        location:{
+          lat:37.7749,
+          lng:-122.4194
+        }
+      });
+    })
+    // getNearbyPlaceMutation
+  }
+
+  if (!postUserMutation.data || !getNearbyPlaceMutation.data) {
     return (
       <div className="absolute z-10 top-5 left-1/2 transform -translate-x-1/2 bg-white shadow-md rounded-xl px-6 py-4 w-[90%] max-w-xl flex flex-col gap-4">
         <h2 className="text-lg font-semibold text-gray-700">
@@ -109,26 +132,26 @@ const MapViewPage = () => {
           onClick={() => {
             console.log("Origin:", origin);
             console.log("Destination:", destination);
-            postUserMutation.mutate({
-              destination: destination?.address as string,
-              origin: origin?.address as string,
-            });
+            handleSubmit(
+               destination?.address as string,
+             origin as any,
+            );
           }}
         >
-          Get Directions
+         {postUserMutation.isPending? <div className="w-2 h-2 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div> : "Get Directions"}
         </button>
       </div>
     );
   }
 
-  if (postUserMutation.isPending) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen space-y-4">
-        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-gray-600 text-sm">Fetching your location...</p>
-      </div>
-    );
-  }
+  // if (postUserMutation.isPending) {
+  //   return (
+  //     <div className="flex flex-col items-center justify-center h-screen space-y-4">
+  //       <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+  //       <p className="text-gray-600 text-sm">Fetching your location...</p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <APIProvider apiKey={GOOGLE_MAPS_API_KEY}>

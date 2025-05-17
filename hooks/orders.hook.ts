@@ -3,10 +3,11 @@ import {
   createOrderServices,
   deleteOrderServices,
   getAllOrdersServices,
+  getNearbyPlaces,
   postUserDirections,
   updateOrderServices,
 } from "@/feature/order/orderServices";
-import { ICreateOrderModal, IOrderDirectionBody } from "@/feature/order/types";
+import { ICreateOrderModal, INearbyPlaceBody, IOrderDirectionBody } from "@/feature/order/types";
 import { _successPromt } from "@/utils/toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -120,6 +121,7 @@ export const usePostUserDirections = () => {
     onSuccess: (data, values) => {
       console.log(data, "data product upppppppp");
       // window.location.reload();
+      _successPromt("Directions Posted", 3000);
 
       // _successPromt("Updated Successfully", 3000);
       // queryClient.invalidateQueries({
@@ -134,3 +136,32 @@ export const usePostUserDirections = () => {
     },
   });
 };
+export const useGetNearbyPlaceMutation = () => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  // const dispatch = useAppDispatch();
+  return useMutation({
+    mutationFn: (data: INearbyPlaceBody) => getNearbyPlaces(data),
+    onMutate: () => {
+      console.log("posting nearby places....");
+      // _successPromt("Directions Posted", 3000);
+    },
+    onSuccess: (data, values) => {
+      console.log(data, "posting nearby places data upppppppp");
+      // window.location.reload();
+
+      // _successPromt("Updated Successfully", 3000);
+      // queryClient.invalidateQueries({
+      //   queryKey: ["useGetAllAdminOrdersQuery", true],
+      // });
+      // dispatch(setUser(user));
+      // dispatch(setAuthentication());
+      // queryClient.setQueryData(["user"], data);
+    },
+    onError: (error: any) => {
+      console.log(error.response?.data?.error || error.message);
+    },
+  });
+};
+
+// Happyadmin001

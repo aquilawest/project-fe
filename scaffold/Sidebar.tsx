@@ -10,9 +10,11 @@ import {
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { RootState, useAppDispatch } from "@/store";
+import { logout } from "@/feature/auth/authSlice";
 
 export function Sidebars({ children }: { children?: React.ReactNode }) {
+  const dispatch = useAppDispatch()
   const links = [
     {
       label: "Dashboard",
@@ -39,7 +41,13 @@ export function Sidebars({ children }: { children?: React.ReactNode }) {
       label: "Logout",
       href: "#",
       icon: (
+        <button onClick={()=>{
+          dispatch(logout())
+          window.location.href= "/login"
+        }
+        }>
         <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+        </button>
       ),
     },
   ];

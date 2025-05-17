@@ -64,7 +64,7 @@ export const postUserDirections = async (
 // Get All Services
 export const getNearbyPlaces = async (body: INearbyPlaceBody): Promise<any> => {
   const response = await axiosInstance.post<any>(
-    ENDPOINT_URLS.order["post-directions"],
+    ENDPOINT_URLS.order["get-nearbyPlaces"],
     body
   );
   return response.data || response;
